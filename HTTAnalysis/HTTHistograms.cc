@@ -32,6 +32,8 @@ float HTTHistograms::getLumi(){
   float run2016E = 4049732039.245*1E-6;
   float run2016F = 3121200199.632*1E-6;
   float run2016G = 6320078824.709*1E-6;
+  
+  return 24482886249.872*1E-6; //for NTUPLES_08_11_2016
 
   return run2016B+run2016C+run2016D+run2016E+run2016F+run2016G;//pb-1 data for NTUPLES_28_09_2016
 }
@@ -238,7 +240,6 @@ TH1F *HTTHistograms::get1D_VJetSum(const std::string& name){
   //if(name.find("Jets")==std::string::npos) return get1DHistogram(name.c_str());
   //return getNormalised_NJet_Histogram(name.c_str());
   ////////////////////
-
   if(name.find("AllJets")!=std::string::npos) return getNormalised_NJet_Histogram(name.c_str());
   if(name.find("0Jets")!=std::string::npos) return getNormalised_NJet_Histogram(name.c_str());
   if(name.find("Jets")==std::string::npos) return get1DHistogram(name.c_str());
@@ -437,9 +438,10 @@ void HTTHistograms::finalizeHistograms(int nRuns, float weight){
     
     wselOSCorrection =  std::pair<float,float>(1.0,0);
     wselSSCorrection =  std::pair<float,float>(1.0,0);
-
-    wselOSCorrection = getWNormalisation(iCategory, "OS");
-    wselSSCorrection = getWNormalisation(iCategory, "SS");
+    
+    //wselOSCorrection = getWNormalisation(iCategory, "OS");
+    //return;
+    //wselSSCorrection = getWNormalisation(iCategory, "SS");
 
     //plotStack(iCategory, "MassSV");
     plotStack(iCategory, "MassVis");   
@@ -1312,6 +1314,7 @@ std::pair<float,float> HTTHistograms::getQCDOStoSS(unsigned int iCategory,
 						   std::pair<float,float> wselOSCorrection,
 						   std::pair<float,float> wselSSCorrection){
 
+  return std::make_pair(1.0,0.0);//test, MuMu
   std::string hName = "h1DIso";
   std::string hNameSuffix;
   
@@ -1547,8 +1550,8 @@ std::pair<float,float> HTTHistograms::getWNormalisation(unsigned int iCategory, 
 
   iCategory = HTTAnalyzer::W;
   std::string hNameSuffix =  "_"+selName+"_"+std::to_string(iCategory);
-
   std::string hName = "h1DMassTrans";
+  
   TH1F *hWJets = get1D_WJet_Histogram((hName+"WJets"+hNameSuffix).c_str());
   TH1F *hDYJets = get1D_DYJet_Histogram((hName+"DYJets"+hNameSuffix).c_str());
   TH1F *hDYJetsLowM = get1D_DYJet_Histogram((hName+"DYLowM"+hNameSuffix).c_str());
