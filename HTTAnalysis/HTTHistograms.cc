@@ -33,6 +33,7 @@ float HTTHistograms::getLumi(){
   float run2016F = 3121200199.632*1E-6;
   float run2016G = 6320078824.709*1E-6;
   
+  return 2645968083.093*1E-6;//test only for C sample
   return 24482886249.872*1E-6; //for NTUPLES_08_11_2016
 
   return run2016B+run2016C+run2016D+run2016E+run2016F+run2016G;//pb-1 data for NTUPLES_28_09_2016
@@ -237,8 +238,8 @@ TH1F *HTTHistograms::get1D_VJetSum(const std::string& name){
   TString hName = name;
 
   ///TEST
-  //if(name.find("Jets")==std::string::npos) return get1DHistogram(name.c_str());
-  //return getNormalised_NJet_Histogram(name.c_str());
+  if(name.find("Jets")==std::string::npos) return get1DHistogram(name.c_str());//test
+  return getNormalised_NJet_Histogram(name.c_str());//test
   ////////////////////
   if(name.find("AllJets")!=std::string::npos) return getNormalised_NJet_Histogram(name.c_str());
   if(name.find("0Jets")!=std::string::npos) return getNormalised_NJet_Histogram(name.c_str());
@@ -377,7 +378,7 @@ void HTTHistograms::defineHistograms(){
    add1DHistogram("h1DStatsTemplate","",21,-0.5,20.5,file_);
    add1DHistogram("h1DNPVTemplate",";Number of PV; Events",61,-0.5,60.5,file_);
    add1DHistogram("h1DNPUTemplate",";Number of PV; Events",600,0,60,file_);
-   add1DHistogram("h1DMassTemplate",";mass [GeV/c^{2}]; Events",35,0,350,file_);
+   add1DHistogram("h1DMassTemplate",";mass [GeV/c^{2}]; Events",60,0,150,file_);
    add1DHistogram("h1DWideMassTemplate",";mass [GeV/c^{2}]; Events",25,0,1500,file_);
    add1DHistogram("h1DPtTemplate",";p_{T}; Events",20,0,100,file_);
    add1DHistogram("h1DEtaTemplate",";#eta; Events",24,-2.4,2.4,file_);
@@ -401,6 +402,7 @@ void HTTHistograms::defineHistograms(){
 void HTTHistograms::finalizeHistograms(int nRuns, float weight){
 
   AnalysisHistograms::finalizeHistograms();
+  
 
   ////Code below tests W+n jets normalisation
   ///Samples split into jet multiplicity are compared to
@@ -434,17 +436,17 @@ void HTTHistograms::finalizeHistograms(int nRuns, float weight){
   ttScale = 0.7;
 
   for(unsigned int iCategory = (int)HTTAnalyzer::jet0_low;
-                   iCategory<(int)HTTAnalyzer::DUMMY;++iCategory){
+                   iCategory<(int)HTTAnalyzer::jet0_high;++iCategory){//test
     
     wselOSCorrection =  std::pair<float,float>(1.0,0);
     wselSSCorrection =  std::pair<float,float>(1.0,0);
     
     //wselOSCorrection = getWNormalisation(iCategory, "OS");
-    //return;
     //wselSSCorrection = getWNormalisation(iCategory, "SS");
 
     //plotStack(iCategory, "MassSV");
-    plotStack(iCategory, "MassVis");   
+    plotStack(iCategory, "MassVis"); 
+    return; //test  
     plotStack(iCategory, "MassTrans");
     
     plotStack(iCategory, "PtMuon");
