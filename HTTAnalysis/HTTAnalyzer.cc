@@ -325,9 +325,7 @@ bool HTTAnalyzer::analyze(const EventProxyBase& iEvent){
                         (aTau.getProperty(PropertyEnum::decayMode)!=tauDecay1ChargedPion0PiZero &&
 			 isOneProng(aTau.getProperty(PropertyEnum::decayMode))); 
   bool cpSelection = cpMuonSelection && cpTauSelection;
-  std::cout<<"1";//test
   if(!tauKinematics || !tauID || !muonKinematics || !trigger) return true;
-  std::cout<<"2";//test
   //if(!cpSelection) return true;
 
  

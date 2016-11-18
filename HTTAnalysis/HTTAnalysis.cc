@@ -14,6 +14,7 @@
 #include "EventProxyHTT.h"
 #include "HTTWeightsMaker.h"
 #include "HTTAnalyzer.h"
+#include "HTTAnalyzerMM.h"
 
 #include "TFile.h"
 #include "TStopwatch.h"
@@ -58,6 +59,7 @@ int main(int argc, char ** argv) {
 	 EventProxyHTT *myEvent = new EventProxyHTT();
 
 	 if(processName=="Weights" || processName=="PU") myAnalyzers.push_back(new HTTWeightsMaker("HTTWeightsMaker"));
+	 else if(processName.find("MM")!=std::string::npos) myAnalyzers.push_back(new HTTAnalyzerMM("HTTAnalyzerMM"));
 	 else myAnalyzers.push_back(new HTTAnalyzer("HTTAnalyzer"));
 
 	 TreeAnalyzer *tree = new TreeAnalyzer("TreeAnalyzer",cfgFileName, myEvent);
