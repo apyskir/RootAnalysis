@@ -238,8 +238,8 @@ TH1F *HTTHistograms::get1D_VJetSum(const std::string& name){
   TString hName = name;
 
   ///TEST
-  if(name.find("Jets")==std::string::npos) return get1DHistogram(name.c_str());//test
-  return getNormalised_NJet_Histogram(name.c_str());//test
+  //if(name.find("Jets")==std::string::npos) return get1DHistogram(name.c_str());//test
+  //return getNormalised_NJet_Histogram(name.c_str());//test
   ////////////////////
   if(name.find("AllJets")!=std::string::npos) return getNormalised_NJet_Histogram(name.c_str());
   if(name.find("0Jets")!=std::string::npos) return getNormalised_NJet_Histogram(name.c_str());
@@ -1256,8 +1256,8 @@ THStack*  HTTHistograms::plotStack(unsigned int iCategory, std::string varName, 
   hSoup->GetYaxis()->SetTitleOffset(0.5);
   hSoup->Divide(hMCSum);  
   hSoup->SetLineWidth(3);
-  hSoup->SetMinimum(0.55);
-  hSoup->SetMaximum(1.55);
+  hSoup->SetMinimum(1.0);//test, was 0.05
+  hSoup->SetMaximum(3.0);//test, was 1.55
   hSoup->SetStats(kFALSE);
   hSoup->SetFillStyle(0);
   hSoup->Draw("E1");
