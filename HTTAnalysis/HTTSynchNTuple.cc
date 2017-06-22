@@ -453,18 +453,17 @@ bool HTTSynchNTuple::analyze(const EventProxyBase& iEvent){
     idMasks_->insert(std::pair<std::string,int>("byVTightIsolationMVArun2v1DBoldDMwLT",0) );
     for(unsigned int iBit=0; iBit<aEvent.ntauIds; iBit++) {
       for(std::map<std::string,int>::iterator it=idMasks_->begin(); it!=idMasks_->end(); ++it){
-	if(aEvent.tauIDStrings[iBit]==it->first) {
-	  it->second |= (1<<iBit);
-	  //debug
-	  ///std::cout<<"\t"<<it->first<<" : "<<it->second<<" : "<<iBit<<std::endl;
-	  break;
-	}
+	      if(aEvent.tauIDStrings[iBit]==it->first) {
+	        it->second |= (1<<iBit);
+	        //debug
+	        ///std::cout<<"\t"<<it->first<<" : "<<it->second<<" : "<<iBit<<std::endl;
+	        break;
+	      }
       }
     }
   }
   //Apply an additional selection
-  if( !selectEvent(aEvent,aPair) )
-      return false;
+  //if( !selectEvent(aEvent,aPair) ) return false;
 
   //Set default values to tree variables
   clearTTreeVariables();
@@ -910,15 +909,18 @@ bool HTTSynchNTuple::selectEvent(const HTTEvent &event, HTTPair &pair){
     metFiltersPass &= ( (metFilters & 1<<i) == 1<<i );
     //std::cout<<i<<". flt: "<<!( (metFilters & 1<<i) == 1<<i )<<", all: "<<metFiltersPass<<std::endl;
   }
+  metFiltersPass = true; //AP 08.06.2017 there are no MET filters in SM HTT
   if(!metFiltersPass) return false;
 
   //Add selection to tighten what is in ntuples
   if(decayMode_=="MuTau"){
-    if( !(std::abs(pair.getLeg1().getP4().Eta())<2.1) )
+    if( !(std::abs(pair.getLeg1().getP4().Eta())<2.4) )
       return false;
     if( !(pair.getLeg1().getP4().Pt()>23) )
       return false;
-    if( !(pair.getLeg2().getP4().Pt()>30) )
+    if( !(std::abs(pair.getLeg2().getP4().Eta())<2.3) )
+      return false;
+    if( !(pair.getLeg2().getP4().Pt()>20) )
       return false;
   }
   else if(decayMode_=="TauTau"){

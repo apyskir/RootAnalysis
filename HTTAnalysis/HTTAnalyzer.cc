@@ -123,7 +123,7 @@ void HTTAnalyzer::setAnalysisObjects(const EventProxyHTT & myEventProxy){
 }
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
-void HTTAnalyzer::addBranch(TTree *tree){ /*tree->Branch("muonPt",&muonPt);*/}
+//void HTTAnalyzer::addBranch(TTree *tree){ /*tree->Branch("muonPt",&muonPt);*/}
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 void HTTAnalyzer::fillControlHistos(const std::string & hNameSuffix, float eventWeight,
@@ -242,10 +242,10 @@ bool HTTAnalyzer::passCategory(unsigned int iCategory){
 bool HTTAnalyzer::analyze(const EventProxyBase& iEvent){
 
         bool runSystematics = false;
+        //clearTTreeVariables();
 
         const EventProxyHTT & myEventProxy = static_cast<const EventProxyHTT&>(iEvent);
         sampleName = getSampleName(myEventProxy);
-        myHistos_->fill1DHistogram("h1DRunNumber"+sampleName,myEventProxy.event->getRunId());
 
         std::string hNameSuffix = sampleName;
         float puWeight = getPUWeight(myEventProxy);
@@ -298,6 +298,7 @@ bool HTTAnalyzer::analyze(const EventProxyBase& iEvent){
 
                         if(!passCategory(iCategory)) continue;
                         categorySuffix = aCategoryRejester[iCategory]->name();
+                        //if(categorySuffix=="0jet" && sampleName=="Data"){std::cout<<"XXX "<<myEventProxy.event->getEventId()<<std::endl;}//test
 
                         float reweightDY = 1.0;
                         if(sampleName.find("DY")!=std::string::npos &&
