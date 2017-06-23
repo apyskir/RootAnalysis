@@ -441,7 +441,7 @@ void HTTHistograms::finalizeHistograms(const std::string & myDecayMode,
 
                 //plotCPhistograms(iCategory);
 
-                plotStack(iCategory, "MassSV");/*
+                plotStack(iCategory, "MassSV");
                 plotStack(iCategory, "MassVis");
                 plotStack(iCategory, "MassTrans");
                 plotStack(iCategory, "UnRollTauPtMassVis");
@@ -482,7 +482,7 @@ void HTTHistograms::finalizeHistograms(const std::string & myDecayMode,
                 plotStack(iCategory, "nPCALeg2");
                 plotStack(iCategory, "Phi-nVectors");
                 plotStack(iCategory, "Phi-nVecIP");
-                plotStack(iCategory, "NPV");*/
+                plotStack(iCategory, "NPV");
         }
 
         ///Make systematic effect histos.
@@ -1378,8 +1378,6 @@ THStack*  HTTHistograms::plotStack(unsigned int iCategory,
         hs->Add(hDYJetsZL,"hist");
         hs->Add(hWJets,"hist");
         hs->Add(hDYJetsZTT,"hist");
-        hs->Print();//test
-        std::cout<<hQCD<<hHiggs<<hVVT<<hWJets<<hDYJetsZTT;//test
         ////////
         TH1F *hMCSum = (TH1F*)hWJets->Clone("hMCSum");
         hMCSum->Reset();
@@ -1442,7 +1440,6 @@ THStack*  HTTHistograms::plotStack(unsigned int iCategory,
         if(!hNameSuffix.size()) hNameSuffix = "baseline";
         hs->SetTitle(("Variable: "+varName+" selection: "+hNameSuffix).c_str());
         hs->Draw("hist");
-std::cout<<"1\n";//test
         hs->GetXaxis()->SetTitle(varName.c_str());
         hs->GetYaxis()->SetTitleOffset(1.4);
         hMCSum->SetFillColor(5);

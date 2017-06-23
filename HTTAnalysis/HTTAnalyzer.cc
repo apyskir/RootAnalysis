@@ -298,7 +298,6 @@ bool HTTAnalyzer::analyze(const EventProxyBase& iEvent){
 
                         if(!passCategory(iCategory)) continue;
                         categorySuffix = aCategoryRejester[iCategory]->name();
-                        //if(categorySuffix=="0jet" && sampleName=="Data"){std::cout<<"XXX "<<myEventProxy.event->getEventId()<<std::endl;}//test
 
                         float reweightDY = 1.0;
                         if(sampleName.find("DY")!=std::string::npos &&
