@@ -436,7 +436,7 @@ void HTTHistograms::finalizeHistograms(const std::string & myDecayMode,
 
         gErrorIgnoreLevel = kBreak;
         //////////////
-        ///Control regions plots
+/*        ///Control regions plots
         for(auto iCategory: mainCategoriesRejester) {
 
                 //plotCPhistograms(iCategory);
@@ -486,7 +486,7 @@ void HTTHistograms::finalizeHistograms(const std::string & myDecayMode,
         }
 
         ///Make systematic effect histos.
-/*        for(unsigned int iSystEffect = (unsigned int)HTTAnalysis::NOMINAL;
+        for(unsigned int iSystEffect = (unsigned int)HTTAnalysis::NOMINAL;
             iSystEffect<=(unsigned int)HTTAnalysis::ZmumuDown; ++iSystEffect) {
                 if(iSystEffect==(unsigned int)HTTAnalysis::DUMMY_SYS) continue;
                 for(auto iCategory: mainCategoriesRejester) {

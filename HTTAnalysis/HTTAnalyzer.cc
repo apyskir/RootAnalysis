@@ -242,7 +242,7 @@ bool HTTAnalyzer::passCategory(unsigned int iCategory){
 bool HTTAnalyzer::analyze(const EventProxyBase& iEvent){
 
         bool runSystematics = false;
-        //clearTTreeVariables();
+        clearTTreeVariables();
 
         const EventProxyHTT & myEventProxy = static_cast<const EventProxyHTT&>(iEvent);
         sampleName = getSampleName(myEventProxy);
@@ -293,6 +293,7 @@ bool HTTAnalyzer::analyze(const EventProxyBase& iEvent){
                 aMET.setP4(met4v);
 
                 myChannelSpecifics->testAllCategories(aSystEffect);
+                fillMLtree(myEventProxy, eventWeightWithSyst);
 
                 for(unsigned int iCategory = 0; iCategory<myNumberOfCategories; ++iCategory) {
 

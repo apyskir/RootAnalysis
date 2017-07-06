@@ -122,6 +122,17 @@ class HTTAnalyzer: public Analyzer{
   ///Get jets separated by deltaR from tau an muon.
   std::vector<HTTParticle> getSeparatedJets(const EventProxyHTT & myEventProxy,
 					    float deltaR);
+					    
+	//fill variables stored in Summary/tree for further analysis with ML techniques
+	void fillMLtree(const EventProxyHTT & myEventProxy, double eventWeightWithSyst = 1.0);
+
+  virtual void fillEventID(const HTTEvent &event, const EventProxyHTT & myEventProxy);
+  virtual void fillLegs(const HTTParticle &leg1, const HTTParticle &leg2);
+  virtual void fillLegsSpecific(const HTTParticle &leg1, const HTTParticle &leg2);
+  virtual void fillPair(const HTTEvent &event, HTTPair &pair);
+  virtual void fillJets(const std::vector<HTTParticle> &jets);
+  virtual void fillVetoes(const HTTEvent &event);
+  virtual bool promoteBJet(const HTTParticle &jet);
 
  protected:
 
