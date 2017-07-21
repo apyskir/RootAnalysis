@@ -241,7 +241,7 @@ bool HTTAnalyzer::passCategory(unsigned int iCategory){
 //////////////////////////////////////////////////////////////////////////////
 bool HTTAnalyzer::analyze(const EventProxyBase& iEvent){
 
-        bool runSystematics = false;
+        bool runSystematics = true;
 
         const EventProxyHTT & myEventProxy = static_cast<const EventProxyHTT&>(iEvent);
         sampleName = getSampleName(myEventProxy);
