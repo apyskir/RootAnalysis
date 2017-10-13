@@ -435,7 +435,7 @@ void HTTHistograms::finalizeHistograms(const std::vector<const HTTAnalysis::even
 
         gErrorIgnoreLevel = kBreak;
         //////////////
-/*        ///Control regions plots
+        ///Control regions plots
         for(auto iCategory: mainCategoriesRejester) {
 
                 //plotCPhistograms(iCategory);
@@ -483,7 +483,7 @@ void HTTHistograms::finalizeHistograms(const std::vector<const HTTAnalysis::even
                 plotStack(iCategory, "Phi-nVecIP");
                 plotStack(iCategory, "NPV");
         }
-
+/*
         ///Make systematic effect histos.
         for(unsigned int iSystEffect = (unsigned int)HTTAnalysis::NOMINAL;
             iSystEffect<=(unsigned int)HTTAnalysis::ZmumuDown; ++iSystEffect) {

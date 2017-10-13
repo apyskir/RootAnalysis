@@ -125,6 +125,7 @@ class HTTAnalyzer: public Analyzer{
 					    
 	//fill variables stored in Summary/tree for further analysis with ML techniques
 	void fillMLtree(const EventProxyHTT & myEventProxy, double eventWeightWithSyst = 1.0);
+	void fillMLquantities(const EventProxyHTT & myEventProxy);
 
   virtual void fillEventID(const HTTEvent &event, const EventProxyHTT & myEventProxy);
   virtual void fillLegs(const HTTParticle &leg1, const HTTParticle &leg2);
@@ -132,6 +133,7 @@ class HTTAnalyzer: public Analyzer{
   virtual void fillPair(const HTTEvent &event, HTTPair &pair);
   virtual void fillJets(const std::vector<HTTParticle> &jets);
   virtual void fillVetoes(const HTTEvent &event);
+  virtual void fillCategory();
   virtual bool promoteBJet(const HTTParticle &jet);
 
  protected:
@@ -191,7 +193,7 @@ class HTTAnalyzer: public Analyzer{
   float nPCAMin_;
   
   //TTree variables
-  Bool_t tree_isData;
+  Int_t tree_sampleNumber;
   //event ID variables
   ULong64_t tree_run;
   ULong64_t tree_lumi;
@@ -356,6 +358,20 @@ class HTTAnalyzer: public Analyzer{
   Bool_t tree_trg_singletau_2 = 0;
   Bool_t tree_trg_doubletau = 0;
   Bool_t tree_trg_muonelectron = 0;
+  
+  //ML quantities and tree helpful variables
+  Float_t tree_dR;
+  Float_t tree_pt_tot;
+  Float_t tree_pt_tt_vis;
+  Float_t tree_min_deta;
+  Float_t tree_leg1_centrality;
+  Float_t tree_leg2_centrality;
+  Float_t tree_pt_ratio;
+  Float_t tree_met_centrality;
+  Int_t tree_category;
+  
+  TLorentzVector pt_tot;
+  Bool_t create_tree, apply_preds;
 
 };
 

@@ -1,5 +1,6 @@
 #include <sstream>
 #include <bitset>
+//#include <Python.h>
 
 #include "RooAbsReal.h"
 #include "RooRealVar.h"
@@ -37,6 +38,9 @@ HTTAnalyzer::HTTAnalyzer(const std::string & aName, const std::string & aDecayMo
 
                 ntupleFile_ = 0;
                 hStatsFromFile = 0;
+                
+                create_tree = false;
+                apply_preds = !create_tree;
         }
 }
 //////////////////////////////////////////////////////////////////////////////
@@ -293,7 +297,7 @@ bool HTTAnalyzer::analyze(const EventProxyBase& iEvent){
                 aMET.setP4(met4v);
 
                 myChannelSpecifics->testAllCategories(aSystEffect);
-                fillMLtree(myEventProxy, eventWeightWithSyst);
+                if(create_tree) fillMLtree(myEventProxy, eventWeightWithSyst);
 
                 for(unsigned int iCategory = 0; iCategory<myNumberOfCategories; ++iCategory) {
 
