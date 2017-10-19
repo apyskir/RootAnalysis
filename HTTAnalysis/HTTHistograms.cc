@@ -334,6 +334,9 @@ std::string HTTHistograms::getTemplateName(const std::string& name){
         else if(name.find("h1DUnRollMassSVYCP")!=std::string::npos) templateName = "h1DUnRollMassSVYCPTemplate";
         else if(name.find("h2DRollMassSVYCP")!=std::string::npos) templateName = "h2DRollMassSVYCPTemplate";
 
+        else if(name.find("h1DUnRollMassSVXGB")!=std::string::npos) templateName = "h1DUnRollMassSVXGBTemplate";
+        else if(name.find("h2DRollMassSVXGB")!=std::string::npos) templateName = "h2DRollMassSVXGBTemplate";
+
         return templateName;
 }
 /////////////////////////////////////////////////////////
@@ -385,6 +388,10 @@ void HTTHistograms::defineHistograms(){
                   svMassBinsVBF = {0,40,60,70,80,90,100,110,120,130,150,200,250};
                   }
                 addRollHistogram("h1DUnRollMjjMassSVTemplate","SV Mass vs Mjj; Events",svMassBinsVBF, mjjBins, file_);
+
+                std::vector<double> xgbPredictionBins = {0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
+                std::vector<double> svMassBinsXGB = {0,80,100,120,130,150,300};
+                addRollHistogram("h1DUnRollMassSVXGBTemplate","XGB vs SV Mass; Events", xgbPredictionBins, svMassBinsXGB, file_);
 
                 ///2D CP histograms
                 vector<double> phiBins;
@@ -482,6 +489,8 @@ void HTTHistograms::finalizeHistograms(const std::vector<const HTTAnalysis::even
                 plotStack(iCategory, "Phi-nVectors");
                 plotStack(iCategory, "Phi-nVecIP");
                 plotStack(iCategory, "NPV");
+
+                plotStack(iCategory, "UnRollMassSVXGB");
         }
 /*
         ///Make systematic effect histos.

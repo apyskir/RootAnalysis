@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <python2.7/Python.h>
 
 #include "ObjectMessenger.h"
 #include "EventProxyBase.h"
@@ -53,7 +54,7 @@ class HTTAnalyzer: public Analyzer{
   virtual void clear(){;};
 
   virtual void addBranch(TTree *);
-  
+
   void clearTTreeVariables();
 
   Analyzer* clone() const;
@@ -122,7 +123,7 @@ class HTTAnalyzer: public Analyzer{
   ///Get jets separated by deltaR from tau an muon.
   std::vector<HTTParticle> getSeparatedJets(const EventProxyHTT & myEventProxy,
 					    float deltaR);
-					    
+
 	//fill variables stored in Summary/tree for further analysis with ML techniques
 	void fillMLtree(const EventProxyHTT & myEventProxy, double eventWeightWithSyst = 1.0);
 	void fillMLquantities(const EventProxyHTT & myEventProxy);
@@ -191,7 +192,7 @@ class HTTAnalyzer: public Analyzer{
 
   //cut on nPCA
   float nPCAMin_;
-  
+
   //TTree variables
   Int_t tree_sampleNumber;
   //event ID variables
@@ -358,7 +359,7 @@ class HTTAnalyzer: public Analyzer{
   Bool_t tree_trg_singletau_2 = 0;
   Bool_t tree_trg_doubletau = 0;
   Bool_t tree_trg_muonelectron = 0;
-  
+
   //ML quantities and tree helpful variables
   Float_t tree_dR;
   Float_t tree_pt_tot;
@@ -369,9 +370,13 @@ class HTTAnalyzer: public Analyzer{
   Float_t tree_pt_ratio;
   Float_t tree_met_centrality;
   Int_t tree_category;
-  
+
   TLorentzVector pt_tot;
   Bool_t create_tree, apply_preds;
+
+  PyObject *pModule, *pName, *pFunc, *pValue, *pArgs, *pList;
+  Float_t prediction;
+  Int_t featuresCount;
 
 };
 

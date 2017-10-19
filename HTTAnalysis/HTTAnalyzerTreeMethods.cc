@@ -176,8 +176,9 @@ void HTTAnalyzer::clearTTreeVariables(){
   tree_pt_ratio = -999;
   tree_met_centrality = -999;
   tree_category = -999;
-  
+
   pt_tot = TLorentzVector();
+  prediction = -999;
 }
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -358,9 +359,9 @@ void HTTAnalyzer::addBranch(TTree *tree){
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 void HTTAnalyzer::fillMLtree(const EventProxyHTT & myEventProxy, double eventWeightWithSyst){
-  
+
   std::vector<HTTParticle> &aJets = *myEventProxy.jets;
-  
+
   ///Filling TTree
   // Event ID variables
   fillEventID(aEvent, myEventProxy);
@@ -375,7 +376,7 @@ void HTTAnalyzer::fillMLtree(const EventProxyHTT & myEventProxy, double eventWei
   //fill ML specific quantities
   fillMLquantities(myEventProxy);
   fillCategory();
-  
+
   if(sampleName=="Data") tree_sampleNumber = 0;
   else if(sampleName.find("DY")!=std::string::npos) {
     if(sampleName.find("MatchT")!=std::string::npos) tree_sampleNumber = 1;
@@ -387,7 +388,7 @@ void HTTAnalyzer::fillMLtree(const EventProxyHTT & myEventProxy, double eventWei
   else if(sampleName.find("WplusHTT125")!=std::string::npos) tree_sampleNumber = 7;
   else if(sampleName.find("WminusHTT125")!=std::string::npos) tree_sampleNumber = 8;
   else if(sampleName.find("ZHTT125")!=std::string::npos) tree_sampleNumber = 9;
-  
+
   /*tree_weight = eventWeightWithSyst;
   //Pielup
   tree_npv = myEventProxy.event->getNPV();
@@ -395,6 +396,31 @@ void HTTAnalyzer::fillMLtree(const EventProxyHTT & myEventProxy, double eventWei
   tree_rho = -999;
   tree_puweight = -999;
 */
+  if(apply_preds){
+    pList = PyList_New(featuresCount+1);
+    PyList_SetItem(pList, 0, PyFloat_FromDouble(tree_dR));
+    PyList_SetItem(pList, 1, PyFloat_FromDouble(tree_pt_tot));
+    PyList_SetItem(pList, 2, PyFloat_FromDouble(tree_pt_tt_vis));
+    PyList_SetItem(pList, 3, PyFloat_FromDouble(tree_min_deta));
+    PyList_SetItem(pList, 4, PyFloat_FromDouble(tree_leg1_centrality));
+    PyList_SetItem(pList, 5, PyFloat_FromDouble(tree_leg2_centrality));
+    PyList_SetItem(pList, 6, PyFloat_FromDouble(tree_pt_ratio));
+    PyList_SetItem(pList, 7, PyFloat_FromDouble(tree_met_centrality));
+    PyList_SetItem(pList, 8, PyFloat_FromDouble(tree_m_vis));
+    PyList_SetItem(pList, 9, PyFloat_FromDouble(tree_m_sv));
+    PyList_SetItem(pList, 10, PyFloat_FromDouble(tree_mt_sv));
+    PyList_SetItem(pList, 11, PyFloat_FromDouble(tree_mjj));
+    PyList_SetItem(pList, 12, PyInt_FromLong(tree_category));
+    pArgs = Py_BuildValue("(O)", pList);
+    pValue = PyObject_CallObject(pFunc, pArgs);
+
+    //std::cout<<"XGB przed: "<<prediction<<std::endl;//test
+    //std::cout<<"Kategoria: "<<tree_category<<std::endl;//test
+    prediction = PyFloat_AsDouble(pValue);
+
+    //std::cout<<"XGB: "<<prediction<<std::endl;//test
+  }
+
 }
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -660,7 +686,7 @@ void HTTAnalyzer::fillMLquantities(const EventProxyHTT & myEventProxy){
   TLorentzVector leg1P4 = aPair.getLeg1().getP4();
   TLorentzVector leg2P4 = aPair.getLeg2().getP4();
   TLorentzVector mvametP4(aPair.getMET().X(), aPair.getMET().Y(), 0, aPair.getMET().Mod());
-  
+
   tree_dR = leg1P4.DeltaR(leg2P4);
   pt_tot = mvametP4 + leg1P4 + leg2P4;
   tree_pt_tt_vis = leg1P4.Pt() + leg2P4.Pt();
@@ -668,7 +694,7 @@ void HTTAnalyzer::fillMLquantities(const EventProxyHTT & myEventProxy){
   float A = std::sin(mvametP4.Phi() - leg2P4.Phi())/std::sin(leg1P4.Phi()-leg2P4.Phi());
   float B = std::sin(leg1P4.Phi() - mvametP4.Phi())/std::sin(leg1P4.Phi()-leg2P4.Phi());
   tree_met_centrality = (A+B)/std::sqrt(pow(A,2)+pow(B,2));
-  
+
   HTTParticle aLeadingJet, aTrailingJet;
   if(aJets.size()>0) {
     aLeadingJet = aJets.at(0);
@@ -685,7 +711,7 @@ void HTTAnalyzer::fillMLquantities(const EventProxyHTT & myEventProxy){
     tree_leg1_centrality = std::exp(-4/std::pow(jeta1-jeta2,2)*std::pow(eta1-(jeta1+jeta2)/2,2));
     tree_leg2_centrality = std::exp(-4/std::pow(jeta1-jeta2,2)*std::pow(eta2-(jeta1+jeta2)/2,2));
     }
-  
+
   tree_pt_tot = pt_tot.Pt();
 }
 //////////////////////////////////////////////////////////////////////////////
@@ -695,10 +721,11 @@ void HTTAnalyzer::fillCategory(){
     std::vector<std::string> mainCategories = {"0jet", "boosted", "vbf"};
     for(unsigned int iCategory = 0; iCategory<myNumberOfCategories; ++iCategory) {
       bool isMain = false;
+      //std::cout<<myChannelSpecifics->getCategoryRejester().at(iCategory)->name()<<": "<<iCategory<<std::endl;
       for(auto s: mainCategories) if(s==myChannelSpecifics->getCategoryRejester().at(iCategory)->name()) isMain=true;
       if(!isMain) continue;
       if(categoryDecisions.at(iCategory)==true) tree_category=iCategory;
-      }
+    }
 }
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////

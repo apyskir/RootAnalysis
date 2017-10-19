@@ -1,6 +1,5 @@
 #include <sstream>
 #include <bitset>
-//#include <Python.h>
 
 #include "RooAbsReal.h"
 #include "RooRealVar.h"
@@ -38,9 +37,28 @@ HTTAnalyzer::HTTAnalyzer(const std::string & aName, const std::string & aDecayMo
 
                 ntupleFile_ = 0;
                 hStatsFromFile = 0;
-                
+
                 create_tree = false;
                 apply_preds = !create_tree;
+
+                //Py_SetProgramName("Hello");  /* optional but recommended */
+                if(apply_preds){
+                  featuresCount = 12;
+                  Py_Initialize();
+                  PyRun_SimpleString("import sys");
+                  PyRun_SimpleString("sys.path.append(\".\")");
+                  pName = PyString_FromString("xgb_interface");
+                  pModule = PyImport_Import(pName);
+                  if(pModule != NULL){
+                    std::cout<<"Mamy moduł\n";
+                    pFunc = PyObject_GetAttrString(pModule, "getModelValue");
+                    if (pFunc && PyCallable_Check(pFunc)){
+                      std::cout<<"Mamy funkcje\n";
+                    }
+                    else std::cout<<"Nie ma funkcji\n";
+                  }
+                  else std::cout<<"Nie ma modułu\n";
+                }
         }
 }
 //////////////////////////////////////////////////////////////////////////////
@@ -74,8 +92,9 @@ void HTTAnalyzer::initialize(TDirectory* aDir,
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 void HTTAnalyzer::finalize(){
-       
+
         myHistos_->finalizeHistograms(myChannelSpecifics->getCategoryRejester());
+        if(apply_preds) Py_Finalize();
 }
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -152,6 +171,7 @@ void HTTAnalyzer::fillControlHistos(const std::string & hNameSuffix, float event
         myHistos_->fill2DUnrolledHistogram("h1DUnRollGammaSumMassSV"+hNameSuffix, aPair.getP4(aSystEffect).M(), gammaSum,eventWeight);
         myHistos_->fill2DUnrolledHistogram("h1DUnRollHiggsPtMassSV"+hNameSuffix, aPair.getP4(aSystEffect).M(), higgsPt, eventWeight);
         myHistos_->fill2DUnrolledHistogram("h1DUnRollMjjMassSV"+hNameSuffix, aPair.getP4(aSystEffect).M(), jetsMass, eventWeight);
+        myHistos_->fill2DUnrolledHistogram("h1DUnRollMassSVXGB"+hNameSuffix, prediction, aPair.getP4(aSystEffect).M(), eventWeight);
         myHistos_->fill1DHistogram("h1DIso"+hNameSuffix,aLeg1.getProperty(PropertyEnum::combreliso),eventWeight);
         if(aSystEffect!=HTTAnalysis::NOMINAL) return;
 
@@ -297,7 +317,7 @@ bool HTTAnalyzer::analyze(const EventProxyBase& iEvent){
                 aMET.setP4(met4v);
 
                 myChannelSpecifics->testAllCategories(aSystEffect);
-                if(create_tree) fillMLtree(myEventProxy, eventWeightWithSyst);
+                fillMLtree(myEventProxy, eventWeightWithSyst);
 
                 for(unsigned int iCategory = 0; iCategory<myNumberOfCategories; ++iCategory) {
 

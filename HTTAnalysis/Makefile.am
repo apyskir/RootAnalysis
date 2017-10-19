@@ -27,7 +27,7 @@ httAnalysis_SOURCES= HTTAnalysis.cc EventProxyHTT.cc \
 
 # Linker options for a.out
 httAnalysis_LDFLAGS = $(top_srcdir)/src/libRootAnalysis.la -R @ROOTLIBDIR@ -L@ROOTLIBDIR@ $(BOOST_REGEX_LDFLAGS)
-httAnalysis_LDADD   = @ROOTLIBS@ -lProof -lRooFitCore -lRooFit @ROOTAUXLIBS@ -lgomp $(BOOST_REGEX_LIBS)
+httAnalysis_LDADD   = @ROOTLIBS@ -lProof -lRooFitCore -lRooFit @ROOTAUXLIBS@ -lgomp $(BOOST_REGEX_LIBS) -lpython2.7
 
 # Compiler options for a.out
 httAnalysis_CPPFLAGS = -I./ -I$(top_srcdir)/include -I@ROOTINCDIR@ $(BOOST_CPPFLAGS)
